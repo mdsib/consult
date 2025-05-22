@@ -4711,14 +4711,9 @@ AS is a conversion function."
         (consult--keep! buffer-list
           (and
            (or (not mode)
-               (let ((mm (buffer-local-value 'major-mode it))
-                     (include-mode-fn (if mode-invert #'not #'identity)))
-                 (if (consp mode)
-                     (seq-some (lambda (m) (funcall include-mode-fn
-                                                    (provided-mode-derived-p mm m)))
-                               mode)
-                   (funcall include-mode-fn
-                            (provided-mode-derived-p mm mode)))))
+               (funcall (if mode-invert #'not #'identity)
+                        (provided-mode-derived-p (buffer-local-value 'major-mode it)
+                                                 mode)))
            (pcase-exhaustive filter
              ('nil t)
              ((or 't 'invert)
